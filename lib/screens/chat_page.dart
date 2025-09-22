@@ -1,11 +1,13 @@
 import 'package:chat_app/contsts.dart';
 import 'package:chat_app/models/get_messages.dart';
+import 'package:chat_app/screens/loginScreen.dart';
 import 'package:chat_app/widgets/cahtbubble.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Firstpadge extends StatelessWidget {
-  const Firstpadge({super.key});
+class ChatPage extends StatelessWidget {
+  const ChatPage({super.key});
   static String id = 'firstPadge';
   @override
   Widget build(BuildContext context) {
@@ -34,21 +36,37 @@ class Firstpadge extends StatelessWidget {
             resizeToAvoidBottomInset: true,
             backgroundColor: Colors.black,
             appBar: AppBar(
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    FirebaseAuth.instance.signOut();
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => Loginscreen()),
+                      (route) => false, // يمسح كل الصفحات اللي قبلها
+                    );
+                  },
+                  icon: Icon(Icons.logout, color: kPrimyColor),
+                ),
+              ],
               backgroundColor: Colors.black,
               automaticallyImplyLeading: false,
               centerTitle: true,
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(kpimage, height: 50),
-                  Text(
-                    'Chat',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+              title: Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(kpimage, height: 50),
+                    Text(
+                      'Chat',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             body: Column(

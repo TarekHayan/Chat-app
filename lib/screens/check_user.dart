@@ -1,6 +1,6 @@
 import 'package:chat_app/helper/ShowSnakBar.dart';
-import 'package:chat_app/screens/firstPadge.dart';
-import 'package:chat_app/screens/logInScreen.dart';
+import 'package:chat_app/screens/chat_page.dart';
+import 'package:chat_app/screens/sign_in_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -29,10 +29,10 @@ class _CheckUserState extends State<CheckUser> {
         if (snapshot.exists) {
           try {
             await user.getIdToken(true);
-            Navigator.pushNamed(context, Firstpadge.id);
+            Navigator.pushNamed(context, ChatPage.id);
           } on FirebaseAuthException catch (e) {
             await FirebaseAuth.instance.signOut();
-            Navigator.pushNamed(context, Loginscreen.id);
+            Navigator.pushNamed(context, SignInPage.id);
             showSnakBar(
               context,
               masseage: "This account has been disabled by an administrator.",
@@ -40,13 +40,13 @@ class _CheckUserState extends State<CheckUser> {
           }
         } else {
           await FirebaseAuth.instance.signOut();
-          Navigator.pushNamed(context, Loginscreen.id);
+          Navigator.pushNamed(context, SignInPage.id);
           showSnakBar(context, masseage: "Please Sigin in  again");
         }
       } else {
         // مش مسجل دخول
         await FirebaseAuth.instance.signOut();
-        Navigator.pushNamed(context, Loginscreen.id);
+        Navigator.pushNamed(context, SignInPage.id);
       }
     });
   }
@@ -54,6 +54,7 @@ class _CheckUserState extends State<CheckUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Center(child: CircularProgressIndicator()), // شاشة تحميل مؤقتة
     );
   }

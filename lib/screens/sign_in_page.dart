@@ -1,34 +1,26 @@
-import 'dart:developer';
-
 import 'package:chat_app/contsts.dart';
 import 'package:chat_app/helper/ShowSnakBar.dart';
-import 'package:chat_app/screens/firstPadge.dart';
-import 'package:chat_app/screens/loginScreen.dart';
-//import 'package:chat_app/screens/logInScreen.dart';
-import 'package:chat_app/widgets/custoumButtom.dart';
-import 'package:chat_app/widgets/textsFiled.dart';
+import 'package:chat_app/screens/chat_page.dart';
+import 'package:chat_app/screens/sign_up_page.dart';
+import 'package:chat_app/widgets/custoum_buttom.dart';
+import 'package:chat_app/widgets/texts_filed.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
-class Signupscreen extends StatefulWidget {
-  Signupscreen({super.key});
-  static String id = 'signUpScreen';
-
+class SignInPage extends StatefulWidget {
+  const SignInPage({super.key});
+  static String id = 'Loginscreen';
   @override
-  State<Signupscreen> createState() => _SignupscreenState();
+  State<SignInPage> createState() => _SignInPageState();
 }
 
-class _SignupscreenState extends State<Signupscreen> {
-  String? userName;
+class _SignInPageState extends State<SignInPage> {
   String? email;
   String? password;
-
   GlobalKey<FormState> formKey = GlobalKey();
-
   bool progress = false;
-
   @override
   Widget build(BuildContext context) {
     return ModalProgressHUD(
@@ -36,7 +28,7 @@ class _SignupscreenState extends State<Signupscreen> {
       child: Scaffold(
         backgroundColor: Colors.black,
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
+          padding: EdgeInsets.symmetric(horizontal: 8),
           child: Form(
             key: formKey,
             child: ListView(
@@ -55,24 +47,16 @@ class _SignupscreenState extends State<Signupscreen> {
                 ),
                 SizedBox(height: 150),
                 Text(
-                  'Sign Up',
+                  'Sign In',
                   style: TextStyle(fontSize: 25, color: Colors.white),
                 ),
                 SizedBox(height: 15),
-                Textsfiled(
-                  hitName: 'User Name',
-                  onChanged: (data) {
-                    userName = data.replaceAll(" ", '').toLowerCase();
-                  },
-                ),
-                SizedBox(height: 8),
                 Textsfiled(
                   hitName: 'Email',
                   onChanged: (data) {
                     email = data.replaceAll(" ", "");
                   },
                 ),
-
                 SizedBox(height: 8),
                 Textsfiled(
                   obscureText: true,
@@ -84,30 +68,17 @@ class _SignupscreenState extends State<Signupscreen> {
                 SizedBox(height: 50),
                 Center(
                   child: Custoumbuttom(
+                    buttomName: 'Sigin In',
                     onTap: () async {
                       if (formKey.currentState!.validate()) {
-                        bool avalib = await cheakUserName(userName!);
-                        if (!avalib) {
-                          showSnakBar(context, masseage: 'User name not valid');
-                          return;
-                        }
-
-                        if (!cheak_lenght_user_name(userName!)) {
-                          showSnakBar(
-                            context,
-                            masseage:
-                                'User Name Characters Lentgh Must Be Between 5 , 30 ',
-                          );
-                          return;
-                        }
-
                         try {
                           progress = true;
                           setState(() {});
-                          await registerUser(email!, password!, userName!);
+                          await sIgnInUseer();
+                          String userName = await getUserName();
                           Navigator.pushNamed(
                             context,
-                            Firstpadge.id,
+                            ChatPage.id,
                             arguments: userName,
                           );
                           progress = false;
@@ -118,32 +89,31 @@ class _SignupscreenState extends State<Signupscreen> {
                               context,
                               masseage: 'The email address is badly formatted.',
                             );
+                            progress = false;
+                            setState(() {});
                           }
-                          if (e.code == 'weak-password') {
+                          if (e.code == 'invalid-credential') {
                             showSnakBar(
                               context,
-                              masseage: "The password provided is too weak.",
+                              masseage: 'email or password are not correct',
                             );
-                          } else if (e.code == 'email-already-in-use') {
+                            progress = false;
+                            setState(() {});
+                          }
+                          if (e.code == 'user-disabled') {
                             showSnakBar(
                               context,
                               masseage:
-                                  'The account already exists for that email.',
+                                  'This account has been disabled by an administrator.',
                             );
+                            progress = false;
+                            setState(() {});
                           }
-                          progress = false;
-                          setState(() {});
-                          return;
                         } catch (e) {
                           showSnakBar(context, masseage: 'there was an error');
-                          return;
                         }
-                        showSnakBar(context, masseage: "register success");
-                        progress = false;
-                        setState(() {});
                       }
                     },
-                    buttomName: 'Sigin Up',
                   ),
                 ),
                 SizedBox(height: 7),
@@ -151,15 +121,15 @@ class _SignupscreenState extends State<Signupscreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'already have an account? ',
+                      'dont have an account? ',
                       style: TextStyle(color: Colors.white, fontSize: 15),
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.pushNamed(context, SignUpPage.id);
                       },
                       child: Text(
-                        'Sigin In',
+                        'Sign Up',
                         style: TextStyle(color: kPrimyColor, fontSize: 20),
                       ),
                     ),
@@ -173,38 +143,24 @@ class _SignupscreenState extends State<Signupscreen> {
     );
   }
 
-  Future<void> registerUser(
-    String email,
-    String password,
-    String username,
-  ) async {
-    UserCredential userCred = await FirebaseAuth.instance
-        .createUserWithEmailAndPassword(email: email, password: password);
-
-    User? user = userCred.user;
-
-    if (user != null) {
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-        'email': email,
-        'username': username,
-        'createdAt': FieldValue.serverTimestamp(),
-      });
-    }
+  Future<void> sIgnInUseer() async {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email!,
+      password: password!,
+    );
   }
 
-  bool cheak_lenght_user_name(String userName) {
-    if (userName.length < 5 || userName.length > 30) {
-      return false;
+  Future<String> getUserName() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      throw Exception('No user is currently signed in.');
     }
-    return true;
-  }
-
-  Future<bool> cheakUserName(String userName) async {
-    final result = await FirebaseFirestore.instance
-        .collection('users')
-        .where('username', isEqualTo: userName)
+    DocumentSnapshot docs = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(user.uid)
         .get();
-
-    return result.docs.isEmpty;
+    // You can return a field from docs if needed, for example:
+    // return docs['username'];
+    return docs['username'];
   }
 }
