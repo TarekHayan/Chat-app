@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class CheckUser extends StatefulWidget {
   const CheckUser({super.key});
-
+  static String id = 'CheckUser';
   @override
   _CheckUserState createState() => _CheckUserState();
 }
