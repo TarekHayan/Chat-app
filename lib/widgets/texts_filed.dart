@@ -2,16 +2,16 @@ import 'package:chat_app/contsts.dart';
 import 'package:flutter/material.dart';
 
 class Textsfiled extends StatelessWidget {
-  Textsfiled({
+  const Textsfiled({
     super.key,
     required this.hitName,
     this.onChanged,
     this.obscureText = false,
   });
-  bool obscureText;
+  final bool obscureText;
 
   final String hitName;
-  Function(String)? onChanged;
+  final Function(String)? onChanged;
   @override
   Widget build(BuildContext context) {
     return TextFormField(

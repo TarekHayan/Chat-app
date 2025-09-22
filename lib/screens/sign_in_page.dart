@@ -3,6 +3,7 @@ import 'package:chat_app/helper/ShowSnakBar.dart';
 import 'package:chat_app/screens/chat_page.dart';
 import 'package:chat_app/screens/sign_up_page.dart';
 import 'package:chat_app/widgets/custoum_buttom.dart';
+import 'package:chat_app/widgets/sign_interface.dart';
 import 'package:chat_app/widgets/texts_filed.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -34,17 +35,7 @@ class _SignInPageState extends State<SignInPage> {
             child: ListView(
               children: [
                 SizedBox(height: 100),
-                Center(child: Image.asset(kpimage)),
-                Center(
-                  child: Text(
-                    'Scholar Chat',
-                    style: TextStyle(
-                      fontFamily: 'pacifico',
-                      color: Colors.white,
-                      fontSize: 35,
-                    ),
-                  ),
-                ),
+                SignInterface(),
                 SizedBox(height: 150),
                 Text(
                   'Sign In',

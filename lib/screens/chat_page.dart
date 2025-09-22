@@ -1,7 +1,8 @@
 import 'package:chat_app/contsts.dart';
+import 'package:chat_app/helper/ShowSnakBar.dart';
 import 'package:chat_app/models/get_messages.dart';
-import 'package:chat_app/screens/loginScreen.dart';
-import 'package:chat_app/widgets/cahtbubble.dart';
+import 'package:chat_app/screens/sign_in_page.dart';
+import 'package:chat_app/widgets/chat_babble.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,7 +13,7 @@ class ChatPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CollectionReference messages = FirebaseFirestore.instance.collection(
-      kfbcolliction,
+      kFbcolliction,
     );
     TextEditingController controller = TextEditingController();
 
@@ -42,9 +43,10 @@ class ChatPage extends StatelessWidget {
                     FirebaseAuth.instance.signOut();
                     Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (context) => Loginscreen()),
-                      (route) => false, // يمسح كل الصفحات اللي قبلها
+                      MaterialPageRoute(builder: (context) => SignInPage()),
+                      (route) => false, // يمسح كل الصفحات اللي
                     );
+                    showSnakBar(context, masseage: "SignOut success");
                   },
                   icon: Icon(Icons.logout, color: kPrimyColor),
                 ),

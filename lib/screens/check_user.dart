@@ -29,24 +29,32 @@ class _CheckUserState extends State<CheckUser> {
         if (snapshot.exists) {
           try {
             await user.getIdToken(true);
-            Navigator.pushNamed(context, ChatPage.id);
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => ChatPage()),
+              (route) => false, // يمسح كل الصفحات اللي قبلها
+            );
           } on FirebaseAuthException catch (e) {
             await FirebaseAuth.instance.signOut();
-            Navigator.pushNamed(context, SignInPage.id);
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => SignInPage()),
+              (route) => false, // يمسح كل الصفحات اللي قبلها
+            );
             showSnakBar(
               context,
               masseage: "This account has been disabled by an administrator.",
             );
           }
-        } else {
-          await FirebaseAuth.instance.signOut();
-          Navigator.pushNamed(context, SignInPage.id);
-          showSnakBar(context, masseage: "Please Sigin in  again");
         }
       } else {
         // مش مسجل دخول
         await FirebaseAuth.instance.signOut();
-        Navigator.pushNamed(context, SignInPage.id);
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => SignInPage()),
+          (route) => false, // يمسح كل الصفحات اللي قبلها
+        );
       }
     });
   }
