@@ -1,5 +1,5 @@
-import 'package:chat_app/contsts.dart';
-import 'package:chat_app/screens/check_user.dart';
+import '../contsts.dart';
+import 'check_user.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {

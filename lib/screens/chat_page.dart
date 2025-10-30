@@ -1,8 +1,8 @@
-import 'package:chat_app/contsts.dart';
-import 'package:chat_app/helper/ShowSnakBar.dart';
-import 'package:chat_app/models/get_messages.dart';
-import 'package:chat_app/screens/sign_in_page.dart';
-import 'package:chat_app/widgets/chat_babble.dart';
+import '../contsts.dart';
+import '../helper/ShowSnakBar.dart';
+import '../models/get_messages.dart';
+import 'sign_in_page.dart';
+import '../widgets/chat_babble.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

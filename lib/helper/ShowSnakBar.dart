@@ -1,4 +1,4 @@
-import 'package:chat_app/contsts.dart';
+import '../contsts.dart';
 import 'package:flutter/material.dart';
 
 void showSnakBar(BuildContext context, {required String masseage}) {

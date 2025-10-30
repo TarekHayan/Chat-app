@@ -1,9 +1,12 @@
-import 'package:chat_app/firebase_options.dart';
-import 'package:chat_app/screens/chat_page.dart';
-import 'package:chat_app/screens/check_user.dart';
-import 'package:chat_app/screens/sign_in_page.dart';
-import 'package:chat_app/screens/sign_up_page.dart';
-import 'package:chat_app/screens/splash_screen.dart';
+import 'package:chat_app/logic/login_cubit/login_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'firebase_options.dart';
+import 'screens/chat_page.dart';
+import 'screens/check_user.dart';
+import 'screens/sign_in_page.dart';
+import 'screens/sign_up_page.dart';
+import 'screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -18,16 +21,19 @@ class ChatApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      routes: {
-        'SplashScreen': (context) => SplashScreen(),
-        CheckUser.id: (context) => CheckUser(),
-        SignInPage.id: (context) => SignInPage(),
-        SignUpPage.id: (context) => SignUpPage(),
-        ChatPage.id: (context) => ChatPage(),
-      },
-      debugShowCheckedModeBanner: false,
-      initialRoute: 'SplashScreen',
+    return BlocProvider(
+      create: (context) => LoginCubit(),
+      child: MaterialApp(
+        routes: {
+          'SplashScreen': (context) => SplashScreen(),
+          CheckUser.id: (context) => CheckUser(),
+          SignInPage.id: (context) => SignInPage(),
+          SignUpPage.id: (context) => SignUpPage(),
+          ChatPage.id: (context) => ChatPage(),
+        },
+        debugShowCheckedModeBanner: false,
+        initialRoute: 'SplashScreen',
+      ),
     );
   }
 }
