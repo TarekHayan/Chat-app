@@ -1,6 +1,5 @@
-import 'package:chat_app/logic/login_cubit/login_cubit.dart';
+import '../logic/login_cubit/login_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../contsts.dart';
 import '../helper/ShowSnakBar.dart';
 import 'chat_page.dart';
@@ -8,8 +7,6 @@ import 'sign_up_page.dart';
 import '../widgets/custoum_buttom.dart';
 import '../widgets/sign_interface.dart';
 import '../widgets/texts_filed.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
@@ -28,8 +25,7 @@ class SignInPage extends StatelessWidget {
         if (state is LoginLoading) {
           progress = true;
         } else if (state is LoginSuccess) {
-          String userName = await getUserName();
-          Navigator.pushNamed(context, ChatPage.id, arguments: userName);
+          Navigator.pushNamed(context, ChatPage.id, arguments: state.userName);
         } else if (state is LoginError) {
           showSnakBar(context, masseage: state.msgError);
         }
@@ -105,19 +101,5 @@ class SignInPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<String> getUserName() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      throw Exception('No user is currently signed in.');
-    }
-    DocumentSnapshot docs = await FirebaseFirestore.instance
-        .collection("users")
-        .doc(user.uid)
-        .get();
-    // You can return a field from docs if needed, for example:
-    // return docs['username'];
-    return docs['username'];
   }
 }

@@ -1,4 +1,4 @@
-import 'package:chat_app/logic/login_cubit/login_cubit.dart';
+import 'logic/login_cubit/login_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'firebase_options.dart';
