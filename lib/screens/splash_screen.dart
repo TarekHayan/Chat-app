@@ -1,5 +1,5 @@
 import '../contsts.dart';
-import 'check_user.dart';
+import 'auth.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -17,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => CheckUser()),
+        MaterialPageRoute(builder: (context) => Auth()),
       );
     });
   }
