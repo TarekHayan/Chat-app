@@ -1,4 +1,6 @@
-import 'logic/login_cubit/login_cubit.dart';
+import 'package:chat_app/logic/sign_up_cubit/sign_up_cubit.dart';
+
+import 'logic/sigin_in_cubit/login_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'firebase_options.dart';
@@ -21,8 +23,11 @@ class ChatApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => LoginCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => LoginCubit()),
+        BlocProvider(create: (context) => SignUpCubit()),
+      ],
       child: MaterialApp(
         routes: {
           'SplashScreen': (context) => SplashScreen(),
