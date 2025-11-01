@@ -1,3 +1,4 @@
+import 'package:chat_app/logic/chat_cubit/chat_cubit_cubit.dart';
 import 'package:chat_app/logic/sign_up_cubit/sign_up_cubit.dart';
 import 'logic/sigin_in_cubit/login_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,6 +26,7 @@ class ChatApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => LoginCubit()),
         BlocProvider(create: (context) => SignUpCubit()),
+        BlocProvider(create: (context) => ChatCubit()),
       ],
       child: MaterialApp(
         routes: {

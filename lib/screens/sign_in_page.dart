@@ -1,3 +1,5 @@
+import 'package:chat_app/logic/chat_cubit/chat_cubit_cubit.dart';
+
 import '../logic/sigin_in_cubit/login_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../contsts.dart';
@@ -25,7 +27,8 @@ class SignInPage extends StatelessWidget {
         if (state is LoginLoading) {
           progress = true;
         } else if (state is LoginSuccess) {
-          Navigator.pushNamed(context, ChatPage.id, arguments: state.userName);
+          BlocProvider.of<ChatCubit>(context).getMasseage();
+          Navigator.pushNamed(context, ChatPage.id);
         } else if (state is LoginError) {
           showSnakBar(context, masseage: state.msgError);
         }

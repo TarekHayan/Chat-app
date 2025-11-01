@@ -1,3 +1,7 @@
+import 'package:chat_app/logic/chat_cubit/chat_cubit_cubit.dart';
+import 'package:chat_app/logic/sigin_in_cubit/login_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../contsts.dart';
 import '../helper/ShowSnakBar.dart';
 import '../models/get_messages.dart';
@@ -5,144 +9,138 @@ import 'sign_in_page.dart';
 import '../widgets/chat_babble.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChatPage extends StatelessWidget {
   const ChatPage({super.key});
   static String id = 'firstPadge';
   @override
   Widget build(BuildContext context) {
-    CollectionReference messages = FirebaseFirestore.instance.collection(
-      kFbcolliction,
-    );
+    List<GetMessages> listOfMessages = [];
     TextEditingController controller = TextEditingController();
 
     String? masseage;
 
-    final ScrollController _scrollController = ScrollController();
-    var userName = ModalRoute.of(context)!.settings.arguments;
-    return StreamBuilder<QuerySnapshot>(
-      stream: messages.orderBy("time", descending: true).snapshots(),
-      builder: (context, snapShot) {
-        if (snapShot.hasData) {
-          List<GetMessages> listOfMessages = [];
-          for (int i = 0; i < snapShot.data!.docs.length; i++) {
-            listOfMessages.add(
-              GetMessages.fromJasonData(snapShot.data!.docs[i]),
-            );
-          }
+    final ScrollController scrollController = ScrollController();
+    String? userName;
 
-          //WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
-          return Scaffold(
-            resizeToAvoidBottomInset: true,
-            backgroundColor: Colors.black,
-            appBar: AppBar(
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    FirebaseAuth.instance.signOut();
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => SignInPage()),
-                      (route) => false, // يمسح كل الصفحات اللي
-                    );
-                    showSnakBar(context, masseage: "SignOut success");
-                  },
-                  icon: Icon(Icons.logout, color: kPrimyColor),
+    var state = context.read<LoginCubit>().state;
+    if (state is LoginSuccess) {
+      userName = state.userName;
+    }
+
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () {
+              FirebaseAuth.instance.signOut();
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => SignInPage()),
+                (route) => false,
+              );
+              showSnakBar(context, masseage: "SignOut success");
+            },
+            icon: Icon(Icons.logout, color: kPrimyColor),
+          ),
+        ],
+        backgroundColor: Colors.black,
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(kpimage, height: 50),
+              Text(
+                'Chat',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
-              backgroundColor: Colors.black,
-              automaticallyImplyLeading: false,
-              centerTitle: true,
-              title: Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(kpimage, height: 50),
-                    Text(
-                      'Chat',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: BlocConsumer<ChatCubit, ChatCubitState>(
+              listener: (context, state) {
+                if (state is ChatCubitSucess) {
+                  listOfMessages = state.messages;
+                }
+              },
+              builder: (context, state) {
+                return ListView.builder(
+                  reverse: true,
+                  controller: scrollController,
+                  itemCount: listOfMessages.length,
+                  itemBuilder: (context, index) {
+                    return (listOfMessages[index].username == userName)
+                        ? ChatBubble(messages: listOfMessages[index])
+                        : ChatBubblemyfriend(messages: listOfMessages[index]);
+                  },
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(right: 10, left: 10, bottom: 20),
+
+            child: TextField(
+              controller: controller,
+              style: TextStyle(color: Colors.white),
+              onChanged: (value) {
+                masseage = value;
+              },
+              onSubmitted: (value) async {
+                masseage = value;
+                BlocProvider.of<ChatCubit>(context).sendMasseage(
+                  userName: userName ?? "no name",
+                  masseage: masseage ?? '',
+                );
+                controller.clear();
+                scrollController.animateTo(
+                  0,
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.easeIn,
+                );
+              },
+
+              decoration: InputDecoration(
+                hint: Text(
+                  "Send Message",
+                  style: TextStyle(color: Colors.white),
+                ),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    BlocProvider.of<ChatCubit>(context).sendMasseage(
+                      userName: userName ?? "no name",
+                      masseage: masseage ?? '',
+                    );
+                    controller.clear();
+                    scrollController.animateTo(
+                      0,
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeIn,
+                    );
+                  },
+                  icon: Icon(Icons.send, color: kPrimyColor),
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: kPrimyColor),
                 ),
               ),
             ),
-            body: Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    reverse: true,
-                    controller: _scrollController,
-                    itemCount: listOfMessages.length,
-                    itemBuilder: (context, index) {
-                      return (listOfMessages[index].username == userName)
-                          ? ChatBubble(messages: listOfMessages[index])
-                          : ChatBubblemyfriend(messages: listOfMessages[index]);
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(right: 10, left: 10, bottom: 20),
-
-                  child: TextField(
-                    controller: controller,
-                    style: TextStyle(color: Colors.white),
-                    onChanged: (value) {
-                      masseage = value;
-                    },
-                    onSubmitted: (value) async {
-                      messages.add({
-                        'message': value,
-                        'time': DateTime.now(),
-                        'id': userName,
-                      });
-                      controller.clear();
-                      _scrollController.animateTo(
-                        0,
-                        duration: Duration(milliseconds: 300),
-                        curve: Curves.easeIn,
-                      );
-                    },
-
-                    decoration: InputDecoration(
-                      hint: Text(
-                        "Send Message",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          messages.add({
-                            'id': userName,
-                            'message': masseage,
-                            'time': DateTime.now(),
-                          });
-                          controller.clear();
-                          _scrollController.animateTo(
-                            0,
-                            duration: Duration(milliseconds: 300),
-                            curve: Curves.easeIn,
-                          );
-                        },
-                        icon: Icon(Icons.send, color: kPrimyColor),
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: kPrimyColor),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        } else {
-          return Center(child: CircularProgressIndicator());
-        }
-      },
+          ),
+        ],
+      ),
     );
   }
 }

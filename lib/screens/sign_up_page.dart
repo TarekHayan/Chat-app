@@ -1,3 +1,4 @@
+import 'package:chat_app/logic/chat_cubit/chat_cubit_cubit.dart';
 import 'package:chat_app/logic/sign_up_cubit/sign_up_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../contsts.dart';
@@ -28,7 +29,8 @@ class SignUpPage extends StatelessWidget {
     return BlocListener<SignUpCubit, SignUpState>(
       listener: (context, state) async {
         if (state is SignUpSuccess) {
-          Navigator.pushNamed(context, ChatPage.id, arguments: state.userName);
+          BlocProvider.of<ChatCubit>(context).getMasseage();
+          Navigator.pushNamed(context, ChatPage.id);
         } else if (state is SignUpLoading) {
           progress = true;
         } else if (state is SignUpError) {
