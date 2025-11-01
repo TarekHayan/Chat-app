@@ -27,7 +27,7 @@ class ChatBubble extends StatelessWidget {
             SizedBox(height: 4),
             Text(
               messages.message,
-              style: TextStyle(color: Colors.white, fontSize: 15),
+              style: TextStyle(color: Colors.white, fontSize: 20),
             ),
             SizedBox(height: 4),
             Text(
@@ -65,7 +65,10 @@ class ChatBubblemyfriend extends StatelessWidget {
           children: [
             Text(messages.username, style: TextStyle(color: kPrimyColor)),
             SizedBox(height: 4),
-            Text(messages.message, style: TextStyle(color: Colors.white)),
+            Text(
+              messages.message,
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
             SizedBox(height: 4),
             Text(
               "${messages.time.hour}:${messages.time.minute} ",

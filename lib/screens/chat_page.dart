@@ -15,7 +15,6 @@ class ChatPage extends StatelessWidget {
   static String id = 'firstPadge';
   @override
   Widget build(BuildContext context) {
-    List<GetMessages> listOfMessages = [];
     TextEditingController controller = TextEditingController();
     var userName = ModalRoute.of(context)!.settings.arguments;
 
@@ -64,13 +63,11 @@ class ChatPage extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: BlocConsumer<ChatCubit, ChatCubitState>(
-              listener: (context, state) {
-                if (state is ChatCubitSucess) {
-                  listOfMessages = state.messages;
-                }
-              },
+            child: BlocBuilder<ChatCubit, ChatCubitState>(
               builder: (context, state) {
+                List<GetMessages> listOfMessages = BlocProvider.of<ChatCubit>(
+                  context,
+                ).messagesList;
                 return ListView.builder(
                   reverse: true,
                   controller: scrollController,
