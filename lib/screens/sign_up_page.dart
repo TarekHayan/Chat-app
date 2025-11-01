@@ -30,7 +30,11 @@ class SignUpPage extends StatelessWidget {
       listener: (context, state) async {
         if (state is SignUpSuccess) {
           BlocProvider.of<ChatCubit>(context).getMasseage();
-          Navigator.pushNamed(context, ChatPage.id);
+          Navigator.pushReplacementNamed(
+            context,
+            ChatPage.id,
+            arguments: state.userName,
+          );
         } else if (state is SignUpLoading) {
           progress = true;
         } else if (state is SignUpError) {

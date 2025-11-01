@@ -17,16 +17,11 @@ class ChatPage extends StatelessWidget {
   Widget build(BuildContext context) {
     List<GetMessages> listOfMessages = [];
     TextEditingController controller = TextEditingController();
+    var userName = ModalRoute.of(context)!.settings.arguments;
 
     String? masseage;
 
     final ScrollController scrollController = ScrollController();
-    String? userName;
-
-    var state = context.read<LoginCubit>().state;
-    if (state is LoginSuccess) {
-      userName = state.userName;
-    }
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -101,8 +96,8 @@ class ChatPage extends StatelessWidget {
               onSubmitted: (value) async {
                 masseage = value;
                 BlocProvider.of<ChatCubit>(context).sendMasseage(
-                  userName: userName ?? "no name",
-                  masseage: masseage ?? '',
+                  userName: userName as String,
+                  masseage: masseage as String,
                 );
                 controller.clear();
                 scrollController.animateTo(
@@ -120,8 +115,8 @@ class ChatPage extends StatelessWidget {
                 suffixIcon: IconButton(
                   onPressed: () {
                     BlocProvider.of<ChatCubit>(context).sendMasseage(
-                      userName: userName ?? "no name",
-                      masseage: masseage ?? '',
+                      userName: userName as String,
+                      masseage: masseage as String,
                     );
                     controller.clear();
                     scrollController.animateTo(

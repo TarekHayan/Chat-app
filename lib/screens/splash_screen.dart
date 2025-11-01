@@ -1,63 +1,56 @@
+import 'package:chat_app/logic/chat_cubit/chat_cubit_cubit.dart';
+
 import '../contsts.dart';
-import 'auth.dart';
+import 'package:chat_app/logic/is_sign_in/is_sign_in_cubit.dart';
+import 'package:chat_app/screens/chat_page.dart';
+import 'package:chat_app/screens/sign_in_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
-
-  @override
-  _SplashScreenState createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    // بعد 3 ثواني يروح للصفحة الرئيسية
-    Future.delayed(Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Auth()),
-      );
-    });
-  }
+  static String id = "SplashScreen";
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black, // الخلفية
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // اللوجو
-            Image.asset(
-              kpimage, // حط صورتك هنا
-              width: 120,
-              height: 120,
+    return BlocConsumer<IsSignInCubit, IsSignInState>(
+      listener: (context, state) {
+        if (state is IsSignInSuccess) {
+          BlocProvider.of<ChatCubit>(context).getMasseage();
+          Navigator.pushReplacementNamed(
+            context,
+            ChatPage.id,
+            arguments: state.userName,
+          );
+        } else if (state is IsSignInError) {
+          Navigator.pushReplacementNamed(context, SignInPage.id);
+        }
+      },
+      builder: (context, state) {
+        if (state is IsSignInInitial) {
+          context.read<IsSignInCubit>().checkUser();
+        }
+
+        return Scaffold(
+          backgroundColor: Colors.black,
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(kpimage, width: 120, height: 120),
+                SizedBox(height: 10),
+                Text(
+                  kPname,
+                  style: TextStyle(color: kPrimyColor, fontSize: 22),
+                ),
+                SizedBox(height: 30),
+                if (state is IsSignInLoading)
+                  CircularProgressIndicator(color: kPrimyColor),
+              ],
             ),
-            const SizedBox(height: 5),
-            // الاسم
-            Text(
-              kPname, // اسمك
-              style: TextStyle(
-                color: kPrimyColor, // اللون الفسفوري
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 100),
-            Text(
-              "By : Tarek Hayan", // اسمك
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.4), // اللون الفسفوري
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

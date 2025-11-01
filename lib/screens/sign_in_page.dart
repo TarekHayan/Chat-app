@@ -28,7 +28,11 @@ class SignInPage extends StatelessWidget {
           progress = true;
         } else if (state is LoginSuccess) {
           BlocProvider.of<ChatCubit>(context).getMasseage();
-          Navigator.pushNamed(context, ChatPage.id);
+          Navigator.pushReplacementNamed(
+            context,
+            ChatPage.id,
+            arguments: state.userName,
+          );
         } else if (state is LoginError) {
           showSnakBar(context, masseage: state.msgError);
         }
