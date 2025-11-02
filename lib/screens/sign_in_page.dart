@@ -1,5 +1,5 @@
+import 'package:chat_app/logic/auth_cubit/auth_cubit.dart';
 import 'package:chat_app/logic/chat_cubit/chat_cubit_cubit.dart';
-import '../logic/sigin_in_cubit/login_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../contsts.dart';
 import '../helper/ShowSnakBar.dart';
@@ -20,7 +20,7 @@ class SignInPage extends StatelessWidget {
   SignInPage({super.key});
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<LoginCubit, LoginState>(
+    return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) async {
         if (state is LoginSuccess) {
           BlocProvider.of<ChatCubit>(context).getMasseage();
@@ -65,7 +65,7 @@ class SignInPage extends StatelessWidget {
                         buttomName: 'Sigin In',
                         onTap: () async {
                           if (formKey.currentState!.validate()) {
-                            BlocProvider.of<LoginCubit>(context).sIgnInUseer(
+                            BlocProvider.of<AuthCubit>(context).signInUser(
                               email: emailController.text.trim(),
                               password: passwordController.text.trim(),
                             );

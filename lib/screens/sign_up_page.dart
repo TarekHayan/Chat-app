@@ -1,5 +1,6 @@
+import 'package:chat_app/logic/auth_cubit/auth_cubit.dart';
+
 import '../logic/chat_cubit/chat_cubit_cubit.dart';
-import '../logic/sign_up_cubit/sign_up_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../contsts.dart';
 import '../helper/ShowSnakBar.dart';
@@ -20,7 +21,7 @@ class SignUpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SignUpCubit, SignUpState>(
+    return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) async {
         if (state is SignUpSuccess) {
           BlocProvider.of<ChatCubit>(context).getMasseage();
@@ -70,7 +71,7 @@ class SignUpPage extends StatelessWidget {
                       child: Custoumbuttom(
                         onTap: () async {
                           if (formKey.currentState!.validate()) {
-                            BlocProvider.of<SignUpCubit>(context).registerUser(
+                            BlocProvider.of<AuthCubit>(context).registerUser(
                               email: emailController.text.trim(),
                               password: passwordController.text.trim(),
                               username: userNameController.text.trim(),

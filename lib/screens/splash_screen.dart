@@ -1,7 +1,7 @@
+import 'package:chat_app/logic/auth_cubit/auth_cubit.dart';
 import 'package:chat_app/logic/chat_cubit/chat_cubit_cubit.dart';
 
 import '../contsts.dart';
-import 'package:chat_app/logic/is_sign_in/is_sign_in_cubit.dart';
 import 'package:chat_app/screens/chat_page.dart';
 import 'package:chat_app/screens/sign_in_page.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +13,7 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<IsSignInCubit, IsSignInState>(
+    return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is IsSignInSuccess) {
           BlocProvider.of<ChatCubit>(context).getMasseage();
@@ -27,8 +27,8 @@ class SplashScreen extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        if (state is IsSignInInitial) {
-          context.read<IsSignInCubit>().checkUser();
+        if (state is AuthInitial) {
+          context.read<AuthCubit>().isSignInUser();
         }
 
         return Scaffold(
