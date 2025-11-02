@@ -5,13 +5,12 @@ class Textsfiled extends StatelessWidget {
   const Textsfiled({
     super.key,
     required this.hitName,
-    this.onChanged,
     this.obscureText = false,
+    required this.controller,
   });
   final bool obscureText;
-
   final String hitName;
-  final Function(String)? onChanged;
+  final TextEditingController controller;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -20,8 +19,9 @@ class Textsfiled extends StatelessWidget {
         if (value!.isEmpty) {
           return 'this field is required';
         }
+        return null;
       },
-      onChanged: onChanged,
+      controller: controller,
       style: TextStyle(color: Colors.white),
       decoration: InputDecoration(
         hint: Text(
