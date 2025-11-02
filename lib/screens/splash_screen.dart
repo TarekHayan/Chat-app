@@ -1,9 +1,9 @@
-import 'package:chat_app/logic/auth_cubit/auth_cubit.dart';
-import 'package:chat_app/logic/chat_cubit/chat_cubit_cubit.dart';
+import '../logic/auth_cubit/auth_cubit.dart';
+import '../logic/chat_cubit/chat_cubit_cubit.dart';
 
 import '../contsts.dart';
-import 'package:chat_app/screens/chat_page.dart';
-import 'package:chat_app/screens/sign_in_page.dart';
+import 'chat_page.dart';
+import 'sign_in_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

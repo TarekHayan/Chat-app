@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:chat_app/contsts.dart';
-import 'package:chat_app/models/get_messages.dart';
+import '../../contsts.dart';
+import '../../models/get_messages.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 

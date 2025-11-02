@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
+
 import '../contsts.dart';
 import '../models/get_messages.dart';
-import 'package:flutter/material.dart';
 
 class ChatBubble extends StatelessWidget {
   const ChatBubble({super.key, required this.messages});
