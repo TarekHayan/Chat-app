@@ -9,11 +9,7 @@ class SignInterface extends StatelessWidget {
     return Column(
       children: [
         Center(
-          child: Container(
-            height: 140,
-            width: 140,
-            child: Image.asset(kpimage),
-          ),
+          child: SizedBox(height: 140, width: 140, child: Image.asset(kpimage)),
         ),
         Center(
           child: Text(

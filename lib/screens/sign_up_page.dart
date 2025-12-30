@@ -45,9 +45,9 @@ class SignUpPage extends StatelessWidget {
                 key: formKey,
                 child: ListView(
                   children: [
-                    SizedBox(height: 100),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.1),
                     SignInterface(),
-                    SizedBox(height: 150),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.1),
                     Text(
                       'Sign Up',
                       style: TextStyle(fontSize: 25, color: Colors.white),
@@ -66,7 +66,7 @@ class SignUpPage extends StatelessWidget {
                       hitName: 'password',
                       controller: passwordController,
                     ),
-                    SizedBox(height: 50),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.05),
                     Center(
                       child: Custoumbuttom(
                         onTap: () async {

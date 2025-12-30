@@ -1,7 +1,5 @@
 import 'package:chat_app/logic/auth_bloc/auth_bloc.dart';
 
-import '../logic/auth_cubit/auth_cubit.dart'
-    hide AuthState, LoginSuccess, LoginError, LoginLoading;
 import '../logic/chat_cubit/chat_cubit_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../contsts.dart';
@@ -47,9 +45,9 @@ class SignInPage extends StatelessWidget {
                 key: formKey,
                 child: ListView(
                   children: [
-                    SizedBox(height: 100),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.1),
                     SignInterface(),
-                    SizedBox(height: 150),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.1),
                     Text(
                       'Sign In',
                       style: TextStyle(fontSize: 25, color: Colors.white),
@@ -62,7 +60,7 @@ class SignInPage extends StatelessWidget {
                       obscureText: true,
                       hitName: 'password',
                     ),
-                    SizedBox(height: 50),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.05),
                     Center(
                       child: Custoumbuttom(
                         buttomName: 'Sigin In',
